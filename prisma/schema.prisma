@@ -4,7 +4,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  // Direct (non-pooled) connection for migrations; on a single local DB it equals DATABASE_URL.
+  directUrl = env("DIRECT_URL")
 }
 
 // ─── Admin & auth ────────────────────────────────────────────

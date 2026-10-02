@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { env } from "../env";
 import { LocalStorage } from "./local";
 import { S3Storage } from "./s3";
+import { SupabaseStorage } from "./supabase";
 
 export interface StoredObject {
   body: ReadableStream<Uint8Array>;
@@ -37,6 +38,9 @@ export function storage(): StorageDriver {
       secretAccessKey: e.S3_SECRET_ACCESS_KEY,
       forcePathStyle: e.S3_FORCE_PATH_STYLE,
     });
+  } else if (e.STORAGE_DRIVER === "supabase") {
+    if (!e.SUPABASE_URL || !e.SUPABASE_SERVICE_ROLE_KEY) throw new Error("STORAGE_DRIVER=supabase requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
+    driver = new SupabaseStorage(e.SUPABASE_URL, e.SUPABASE_SERVICE_ROLE_KEY, e.SUPABASE_BUCKET);
   } else {
     driver = new LocalStorage(e.STORAGE_LOCAL_DIR);
   }
