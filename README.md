@@ -211,6 +211,8 @@ node --env-file=.env --import tsx prisma/seed.ts --no-demo   # каталог б
    Мастер сам проверит токен, установит описание бота **со ссылкой на сайт**, меню команд и кнопку меню «Сайт VAREN» (на HTTPS-адресе открывает сайт прямо в Telegram), попросит нажать «Старт» в боте (или написать `/start` в группе менеджеров), запишет `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` и `TELEGRAM_WEBHOOK_SECRET` в `.env` и пришлёт приветствие с кнопками «Открыть сайт», «Админка», «Заявки», «Excel».
 3. Перезапустите сайт. Чтобы бот отвечал на команды, запустите его: `npm run bot` (long polling — работает без публичного адреса) или на сервере с HTTPS включите webhook: `npm run telegram -- webhook https://ваш-домен.ru`.
 
+Аватарка с логотипом: `node scripts/bot-avatar.mjs && npm run telegram -- avatar` (мастер `setup` ставит её автоматически).
+
 Команды бота: `/start` — ссылки на сайт и админку, `/site`, `/admin`, `/leads` — последние 5 заявок, `/stats` — сводка за сегодня и неделю, `/id` — id чата. `/leads` и `/stats` работают только в чате менеджеров.
 
 ### Ручная настройка
@@ -350,6 +352,19 @@ docker compose --profile setup run --rm setup  # один раз: каталог
 Файлы клиентов хранятся в volume `uploads`, БД — в `pgdata`. Перед сайтом поставьте Nginx/Caddy с HTTPS (Caddy: `varen.ru { reverse_proxy localhost:3000 }`). Прокси должен передавать заголовки `Host`, `X-Forwarded-For`, `X-Forwarded-Proto`.
 
 Без Docker: Node 20+, PostgreSQL, `npm ci && npm run build && npm run db:deploy && npm run db:seed && npm run start` под pm2/systemd.
+
+### Вариант 0 — показать сайт без хостинга (демо-туннель)
+
+Для просмотра заказчиком сайта, запущенного на своём компьютере:
+```bash
+# в .env: PUBLIC_URL_FILE=".tunnel-url"
+npm run build && npm run start   # сайт на :3000
+npm run tunnel                   # публичный https-адрес *.lhr.life через localhost.run
+npm run bot                      # Telegram-бот
+```
+Скрипт держит SSH-туннель, при обрыве переподключается, записывает новый адрес в `.tunnel-url` (его читают сайт, Telegram-уведомления и бот без перезапуска), обновляет кнопку меню бота и присылает менеджеру в Telegram новую ссылку. Адрес бесплатного туннеля временный; для постоянной работы используйте вариант 1 или 2.
+
+После запуска можно прогреть кэш изображений, чтобы первый посетитель не ждал генерации размеров фото: `npm run images:warm`. После добавления новых фото в `public/images` пересоберите превью: `npm run images:blur`.
 
 ### Вариант 2 — Vercel + Neon + S3
 
