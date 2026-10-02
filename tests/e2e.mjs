@@ -242,6 +242,7 @@ try {
   }
   const todayLeads = await page.goto(BASE + "/admin/analytics?period=today").then(() => page.locator("text=Заявки").first().isVisible());
   ok(todayLeads, "аналитика: KPI отображаются");
+  await page.locator(".recharts-surface").nth(2).waitFor({ timeout: 10_000 }).catch(() => undefined);
   ok((await page.locator(".recharts-surface").count()) >= 3, "аналитика: графики отрисованы");
   const events = await db.event.groupBy({ by: ["type"], where: { createdAt: { gt: new Date(Date.now() - 10 * 60_000) } }, _count: { _all: true } });
   const types = events.map((e) => e.type);
