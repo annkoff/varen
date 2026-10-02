@@ -161,14 +161,14 @@ try {
   await ap.fill("#password", "wrong-password-123");
   await ap.click('button[type="submit"]');
   ok(await ap.getByText("Неверный email или пароль").waitFor({ timeout: 15_000 }).then(() => true, () => false), "неверный пароль отклонён");
-  for (let i = 0; i < 5; i++) {
+  const alertText = () => ap.locator('form [role="alert"]').innerText().catch(() => "");
+  for (let i = 0; i < 6; i++) {
     await ap.fill("#email", "brute-force@example.com");
     await ap.fill("#password", `guess-${i}-password`);
-    await Promise.all([ap.waitForResponse((r) => r.request().method() === "POST" && r.url().includes("/admin/login")), ap.click('button[type="submit"]')]);
+    await Promise.all([ap.waitForResponse((r) => r.request().method() === "POST"), ap.click('button[type="submit"]')]);
+    await ap.waitForTimeout(800);
   }
-  await ap.fill("#password", "guess-final-password");
-  await ap.click('button[type="submit"]');
-  ok(await ap.getByText("Слишком много неудачных попыток").waitFor({ timeout: 15_000 }).then(() => true, () => false), "перебор пароля блокируется после 5 попыток");
+  ok((await alertText()).includes("Слишком много неудачных попыток"), "перебор пароля блокируется после 5 попыток");
   await anon.close();
 
   step("18–22. Админка: вход, заявка, файлы, статус, Excel");
@@ -311,6 +311,7 @@ try {
     await db.lead.deleteMany({ where: { id: { in: leads.map((l) => l.id) } } });
     await db.referralLink.deleteMany({ where: { name: { startsWith: "E2E " } } });
     await db.visitor.deleteMany({ where: { events: { some: { source: { startsWith: "ref:e2e-" } } } } });
+    await db.loginAttempt.deleteMany({ where: { key: { contains: "brute-force@example.com" } } });
     console.log(`\n(очищено тестовых заявок: ${leads.length})`);
   }
   await db.$disconnect();

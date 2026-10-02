@@ -18,7 +18,8 @@
     "db:reset-demo": "node --env-file-if-exists=.env --import tsx prisma/seed.ts --reset-demo",
     "db:studio": "prisma studio",
     "admin:create": "node --env-file-if-exists=.env --import tsx scripts/create-admin.ts",
-    "telegram": "node --env-file-if-exists=.env --import tsx scripts/telegram.ts"
+    "telegram": "node --env-file-if-exists=.env --import tsx scripts/telegram.ts",
+    "bot": "node --env-file-if-exists=.env --import tsx scripts/bot.ts"
   },
   "prisma": {
     "seed": "node --import tsx prisma/seed.ts"

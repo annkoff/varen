@@ -84,7 +84,7 @@ export default async function ProjectPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
       <header className="relative isolate flex min-h-[86svh] items-end overflow-hidden">
-        {cover && <Image src={cover.url} alt={cover.alt || project.title} fill priority sizes="100vw" quality={80} className="-z-10 object-cover animate-slow-zoom" />}
+        {cover && <Image src={cover.url} alt={cover.alt || project.title} fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/30 to-ink/40" />
         <div className="container-x pb-12 pt-36 md:pb-16">
           <nav aria-label="Хлебные крошки" className="eyebrow mb-6 flex flex-wrap items-center gap-3 text-paper/70 animate-hero">

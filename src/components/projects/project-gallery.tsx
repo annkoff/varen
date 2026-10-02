@@ -55,7 +55,7 @@ export function ProjectGallery({ images, projectSlug }: { images: GalleryImage[]
             )}
             aria-label={`Открыть фото: ${img.alt}`}
           >
-            <Image src={img.url} alt={img.alt} fill sizes={i % 5 === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"} quality={70} className="object-cover" />
+            <Image src={img.url} alt={img.alt} fill sizes={i % 5 === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"} quality={85} className="object-cover" />
             <span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/80 to-transparent p-4 pt-10 text-xs tracking-wide text-paper/90 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
               {IMAGE_CATEGORY_LABELS[img.category]} · {img.alt}
             </span>
@@ -116,7 +116,7 @@ function Lightbox({ images, index, onIndex, onClose }: { images: GalleryImage[];
         </button>
       </div>
       <div className="relative min-h-0 flex-1" onClick={onClose}>
-        <Image key={img.id} src={img.url} alt={img.alt} fill sizes="100vw" quality={80} className="object-contain px-2 animate-fade md:px-20" onClick={(e) => e.stopPropagation()} />
+        <Image key={img.id} src={img.url} alt={img.alt} fill sizes="100vw" quality={92} className="object-contain px-2 animate-fade md:px-20" onClick={(e) => e.stopPropagation()} />
         <button type="button" onClick={(e) => { e.stopPropagation(); go(-1); }} className="absolute left-2 top-1/2 hidden h-14 w-14 -translate-y-1/2 items-center justify-center text-paper/70 hover:text-paper md:flex" aria-label="Предыдущее фото">
           <svg viewBox="0 0 24 10" className="h-3 w-8 rotate-180" fill="none" stroke="currentColor" strokeWidth={1.2} aria-hidden><path d="M0 5h23M18.5 .5 23 5l-4.5 4.5" /></svg>
         </button>

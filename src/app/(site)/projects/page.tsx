@@ -76,7 +76,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
         </div>
       </section>
 
-      <CtaBand title="Не нашли свой дом?" text="Покажите референсы или готовый проект — посчитаем стоимость и сроки под ваш участок." image="/images/photos/ph-93.webp" />
+      <CtaBand title="Не нашли свой дом?" text="Покажите референсы или готовый проект — посчитаем стоимость и сроки под ваш участок." image="/images/photos/ph-125.webp" />
     </>
   );
 }

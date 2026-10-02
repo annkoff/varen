@@ -23,7 +23,9 @@ async function check(ctx, urls, w) {
   page.on("pageerror", (e) => errors.push(String(e).slice(0, 200)));
   for (const u of urls) {
     errors.length = 0;
-    await page.goto(BASE + u, { waitUntil: "networkidle" });
+    // "load", not "networkidle": the embedded Yandex map keeps background connections open.
+    await page.goto(BASE + u, { waitUntil: "load" });
+    await page.waitForTimeout(400);
     await page.evaluate(() => document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in")));
     // Elements wider than the viewport (ignores intentionally scrollable containers).
     const offenders = await page.evaluate(() => {

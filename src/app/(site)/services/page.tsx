@@ -23,7 +23,7 @@ export default function ServicesPage() {
           {SERVICES.map((s, i) => (
             <Reveal key={s.slug} className="grid gap-10 lg:grid-cols-12 lg:items-center">
               <Link href={`/services/${s.slug}`} className={`img-zoom relative block aspect-[4/3] overflow-hidden bg-ink-2 lg:col-span-7 ${i % 2 ? "lg:order-2 lg:col-start-6" : ""}`}>
-                <Image src={s.image} alt={s.title} fill sizes="(min-width: 1024px) 58vw, 100vw" quality={70} className="object-cover" />
+                <Image src={s.image} alt={s.title} fill sizes="(min-width: 1024px) 58vw, 100vw" quality={85} className="object-cover" />
               </Link>
               <div className={`lg:col-span-5 ${i % 2 ? "lg:order-1 lg:col-start-1 lg:row-start-1" : "lg:col-start-8"}`}>
                 <p className="eyebrow mb-5">{s.number}</p>

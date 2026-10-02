@@ -30,7 +30,7 @@ export default async function AdminProjectsPage() {
           {projects.map((p, i) => (
             <li key={p.id} className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
               <Link href={`/admin/projects/${p.id}`} className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-ink-3 sm:w-32">
-                {p.images[0] && <Image src={p.images[0].url} alt="" fill sizes="128px" quality={70} className="object-cover" />}
+                {p.images[0] && <Image src={p.images[0].url} alt="" fill sizes="128px" quality={85} className="object-cover" />}
               </Link>
               <div className="min-w-0 flex-1">
                 <Link href={`/admin/projects/${p.id}`} className="text-lg hover:underline">

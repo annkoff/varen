@@ -22,7 +22,7 @@ export function ProjectCard({
     <Link href={`/projects/${project.slug}`} className="group block" data-cta="project_card">
       <div className={clsx("img-zoom relative overflow-hidden bg-ink-2", aspect)}>
         {cover && (
-          <Image src={cover.url} alt={cover.alt || project.title} fill sizes={sizes} priority={priority} quality={70} className="object-cover" />
+          <Image src={cover.url} alt={cover.alt || project.title} fill sizes={sizes} priority={priority} quality={85} className="object-cover" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-100" />
         {index !== undefined && <span className="absolute left-5 top-5 text-xs tracking-[0.2em] text-paper/80">{String(index + 1).padStart(2, "0")}</span>}

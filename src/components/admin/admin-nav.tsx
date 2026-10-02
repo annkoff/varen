@@ -39,6 +39,16 @@ export function AdminNav({ email, newLeads, logout }: { email: string; newLeads:
     </ul>
   );
 
+  // Always visible: one click downloads ALL leads as a real .xlsx file.
+  const exportButton = (
+    <a href="/api/admin/leads/export" download className="btn btn-primary btn-sm w-full gap-2" data-testid="nav-export">
+      <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.4} aria-hidden>
+        <path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 13.5h11" />
+      </svg>
+      Выгрузить в Excel
+    </a>
+  );
+
   const footer = (
     <div className="space-y-3 border-t border-line pt-4 text-xs text-mute">
       <p className="truncate" title={email}>
@@ -65,24 +75,33 @@ export function AdminNav({ email, newLeads, logout }: { email: string; newLeads:
             <Logo className="h-4" />
             <span className="mt-2 block text-[10px] tracking-[0.2em] text-mute uppercase">Admin</span>
           </Link>
+          <div className="mb-6 px-1">{exportButton}</div>
           <nav aria-label="Админ-навигация">{list}</nav>
         </div>
         {footer}
       </aside>
 
-      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-ink/95 px-4 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-3 border-b border-line bg-ink/95 px-4 backdrop-blur lg:hidden">
         <Link href="/admin" className="flex items-center gap-3">
           <Logo className="h-3.5" />
-          <span className="text-[10px] tracking-[0.2em] text-mute uppercase">Admin</span>
+          <span className="hidden text-[10px] tracking-[0.2em] text-mute uppercase min-[400px]:inline">Admin</span>
         </Link>
-        <button type="button" onClick={() => setOpen((v) => !v)} className="btn btn-outline btn-sm" aria-expanded={open}>
+        <div className="flex items-center gap-2">
+        <a href="/api/admin/leads/export" download className="btn btn-primary btn-sm px-3" aria-label="Выгрузить все заявки в Excel">
+          Excel
+        </a>
+        <button type="button" onClick={() => setOpen((v) => !v)} className="btn btn-outline btn-sm gap-2 px-3" aria-expanded={open}>
           {open ? "Закрыть" : "Меню"}
           {!open && newLeads > 0 && <span className="bg-sand px-1.5 text-[10px] text-ink">{newLeads}</span>}
         </button>
+        </div>
       </header>
       {open && (
         <div className="fixed inset-0 top-14 z-30 flex flex-col justify-between overflow-y-auto bg-ink p-4 lg:hidden">
-          <nav aria-label="Админ-навигация">{list}</nav>
+          <div>
+            <div className="mb-4">{exportButton}</div>
+            <nav aria-label="Админ-навигация">{list}</nav>
+          </div>
           {footer}
         </div>
       )}

@@ -45,7 +45,7 @@ export default async function EditProjectPage({ params, searchParams }: Props) {
             {project.images.map((img, i) => (
               <li key={img.id} className="grid gap-3 py-4 sm:grid-cols-[120px_1fr]">
                 <div className="relative aspect-[4/3] overflow-hidden bg-ink-3">
-                  <Image src={img.url} alt={img.alt} fill sizes="120px" quality={70} className="object-cover" />
+                  <Image src={img.url} alt={img.alt} fill sizes="120px" quality={85} className="object-cover" />
                   {i === 0 && <span className="absolute left-1 top-1 bg-sand px-1.5 text-[10px] text-ink">обложка</span>}
                 </div>
                 <div className="space-y-2">

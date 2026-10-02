@@ -29,7 +29,7 @@ export default async function RequestPage({ searchParams }: { searchParams: Prom
           <h1 className="display text-[clamp(2.6rem,5.5vw,4.8rem)]">Расскажите о своём доме</h1>
           <p className="lead-text mt-6">Менеджер перезвонит в течение рабочего дня, уточнит детали и предложит время встречи.</p>
           <div className="relative mt-12 hidden aspect-[4/5] overflow-hidden lg:block">
-            <Image src="/images/photos/ph-74.webp" alt="" fill sizes="30vw" quality={70} className="object-cover" />
+            <Image src="/images/photos/ph-74.webp" alt="" fill sizes="30vw" quality={85} className="object-cover" />
           </div>
           <div className="mt-10 space-y-2 text-sm text-mute">
             <p>Удобнее позвонить?</p>

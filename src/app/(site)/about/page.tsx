@@ -42,7 +42,7 @@ export default function AboutPage() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-12">
           <Reveal className="relative aspect-[4/5] overflow-hidden lg:col-span-5">
-            <Image src="/images/photos/ph-122.webp" alt="Дом VAREN вечером" fill sizes="(min-width:1024px) 40vw, 100vw" quality={70} className="object-cover" />
+            <Image src="/images/photos/ph-122.webp" alt="Дом VAREN вечером" fill sizes="(min-width:1024px) 40vw, 100vw" quality={85} className="object-cover" />
           </Reveal>
           <Reveal className="prose-v text-lg lg:col-span-6 lg:col-start-7" delay={80}>
             <p className="!text-paper text-[clamp(1.3rem,2.2vw,1.8rem)] !leading-snug">

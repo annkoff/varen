@@ -44,7 +44,7 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-        <Image src="/images/photos/ph-49.webp" alt="Современный загородный дом VAREN с архитектурной подсветкой" fill priority sizes="100vw" quality={80} className="-z-10 object-cover animate-slow-zoom" />
+        <Image src="/images/photos/ph-49.webp" alt="Современный загородный дом VAREN с архитектурной подсветкой" fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/50" />
         <div className="container-x pb-10 pt-32 md:pb-14">
           <p className="eyebrow mb-6 animate-hero text-paper/70">С {FOUNDED_YEAR} года · по всей России</p>
@@ -113,7 +113,7 @@ export default async function HomePage() {
                 <h3 className="text-[clamp(1.5rem,3vw,2.5rem)] font-light tracking-tight transition-colors group-hover:text-sand-2 md:col-span-5">{s.title}</h3>
                 <p className="text-[15px] leading-relaxed text-mute md:col-span-4">{s.short}</p>
                 <div className="relative hidden aspect-[4/3] overflow-hidden md:col-span-2 md:block">
-                  <Image src={s.image} alt="" fill sizes="200px" quality={70} className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" />
+                  <Image src={s.image} alt="" fill sizes="200px" quality={85} className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" />
                 </div>
               </Link>
             </Reveal>
@@ -166,7 +166,7 @@ export default async function HomePage() {
       <Section className="pt-0 md:pt-0">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           <Reveal className="relative aspect-[4/5] overflow-hidden lg:col-span-5">
-            <Image src="/images/photos/ph-41.webp" alt="Двусветная гостиная в доме VAREN" fill sizes="(min-width: 1024px) 40vw, 100vw" quality={70} className="object-cover" />
+            <Image src="/images/photos/ph-87.webp" alt="Двусветная гостиная в доме VAREN" fill sizes="(min-width: 1024px) 40vw, 100vw" quality={85} className="object-cover" />
           </Reveal>
           <div className="lg:col-span-6 lg:col-start-7">
             <SectionHeader eyebrow="Как начать" title="С нашим проектом, с вашим или с вашим дизайнером" className="!mb-10 !block" />

@@ -2,12 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
-import { formatDate, formatRub, leadNumber } from "@/lib/format";
-import { escapeHtml, sendMessage } from "@/lib/telegram/client";
-
-interface Update {
-  message?: { chat: { id: number; type: string; title?: string }; text?: string };
-}
+import { handleUpdate, type TgButton, type TgUpdate } from "@/lib/telegram/commands";
 
 function validSecret(header: string | null, expected: string | undefined): boolean {
   if (!expected || !header) return false;
@@ -16,41 +11,27 @@ function validSecret(header: string | null, expected: string | undefined): boole
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-/**
- * Optional bot commands (set via setWebhook with secret_token):
- *   /start, /id   — show the chat id (helps to fill TELEGRAM_CHAT_ID)
- *   /leads        — the last 5 leads (only in the configured manager chat)
- */
+/** Bot commands in production (set via `npm run telegram -- webhook <url>`). Locally use `npm run bot`. */
 export async function POST(req: NextRequest) {
   const e = env();
   if (!validSecret(req.headers.get("x-telegram-bot-api-secret-token"), e.TELEGRAM_WEBHOOK_SECRET)) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
-  const update = (await req.json().catch(() => null)) as Update | null;
-  const msg = update?.message;
-  if (!msg?.text) return NextResponse.json({ ok: true });
+  const update = (await req.json().catch(() => null)) as TgUpdate | null;
+  if (!update) return NextResponse.json({ ok: true });
 
-  const chatId = msg.chat.id;
-  const command = msg.text.trim().split(/[\s@]/)[0].toLowerCase();
+  await handleUpdate(update, {
+    db,
+    siteUrl: e.SITE_URL,
+    managerChatId: e.TELEGRAM_CHAT_ID,
+    send: (chatId, text, rows: TgButton[][] = []) =>
+      fetch(`https://api.telegram.org/bot${e.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", link_preview_options: { is_disabled: true }, ...(rows.length ? { reply_markup: { inline_keyboard: rows } } : {}) }),
+        signal: AbortSignal.timeout(8000),
+      }).catch(() => undefined),
+  }).catch((err) => console.error("[telegram webhook]", err));
 
-  if (command === "/start" || command === "/id") {
-    await sendMessage(
-      `Бот менеджера VAREN.\nID этого чата: <code>${chatId}</code>\nУкажите его в переменной TELEGRAM_CHAT_ID, чтобы получать заявки.`,
-      [],
-      chatId
-    );
-  } else if (command === "/leads") {
-    if (String(chatId) !== e.TELEGRAM_CHAT_ID) {
-      await sendMessage("Этот чат не подключён к заявкам.", [], chatId);
-    } else {
-      const leads = await db.lead.findMany({ orderBy: { createdAt: "desc" }, take: 5 });
-      const text = leads.length
-        ? leads
-            .map((l) => `<b>${leadNumber(l.id)}</b> · ${formatDate(l.createdAt, true)}\n${escapeHtml(l.name)}, ${escapeHtml(l.phone)}${l.estimatedPrice ? ` · ${formatRub(l.estimatedPrice)}` : ""}`)
-            .join("\n\n")
-        : "Заявок пока нет.";
-      await sendMessage(text, [], chatId);
-    }
-  }
   return NextResponse.json({ ok: true });
 }

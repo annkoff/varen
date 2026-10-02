@@ -13,9 +13,9 @@ const nextConfig: NextConfig = {
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [70, 80],
+    qualities: [85, 92],
     localPatterns: [{ pathname: "/images/**" }, { pathname: "/media/**" }],
-    deviceSizes: [640, 828, 1080, 1280, 1600, 1920],
+    deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
