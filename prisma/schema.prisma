@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Admin & auth ────────────────────────────────────────────
+
+model Admin {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String    @default("Администратор")
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  userAgent String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([adminId])
+}
+
+/// Used for brute-force protection of the admin login.
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  key       String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}
+
+// ─── Catalog ─────────────────────────────────────────────────
+
+enum ImageCategory {
+  EXTERIOR
+  INTERIOR
+  FINISHING
+  PLOT
+  LANDSCAPE
+  EXTRA
+}
+
+model Project {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  title       String
+  location    String
+  summary     String
+  description String
+  area        Int
+  floors      Int
+  material    String
+  style       String
+  year        Int
+  durationMonths Int
+  plotArea    Int?
+  packageLevel String        @default("turnkey")
+  worksDone   String[]
+  extras      String[]
+  published   Boolean        @default(true)
+  featured    Boolean        @default(false)
+  sortOrder   Int            @default(0)
+  images      ProjectImage[]
+  reviews     Review[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+model ProjectImage {
+  id         String        @id @default(cuid())
+  projectId  String
+  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url        String
+  /// Set when the image was uploaded through the admin (lives in file storage).
+  storageKey String?
+  alt        String        @default("")
+  category   ImageCategory @default(EXTERIOR)
+  sortOrder  Int           @default(0)
+  createdAt  DateTime      @default(now())
+
+  @@index([projectId, sortOrder])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  authorName String
+  authorCity String
+  text       String
+  rating     Int      @default(5)
+  projectId  String?
+  project    Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  published  Boolean  @default(true)
+  isDemo     Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+// ─── Leads ───────────────────────────────────────────────────
+
+enum LeadStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum NotifyStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+model Lead {
+  id             Int           @id @default(autoincrement())
+  /// Random client-generated key; makes accidental double submits idempotent.
+  formId         String        @unique
+  name           String
+  phone          String
+  email          String?
+  region         String
+  services       String[]
+  area           Int?
+  description    String?
+  consentAt      DateTime
+
+  /// Raw calculator input as submitted (validated) — see src/lib/calculator.
+  calculator     Json?
+  calcArea       Int?
+  calcFloors     Int?
+  calcMaterial   String?
+  calcPackage    String?
+  /// Server-side recalculated estimate in rubles.
+  estimatedPrice Int?
+
+  status         LeadStatus    @default(NEW)
+  managerNote    String?
+
+  source         String        @default("direct")
+  refCode        String?
+  referralLinkId String?
+  referralLink   ReferralLink? @relation(fields: [referralLinkId], references: [id], onDelete: SetNull)
+  landingPage    String?
+  referrer       String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmContent     String?
+  utmTerm        String?
+  attributedAt   DateTime?
+  deviceType     String?
+  visitorId      String?
+  visitor        Visitor?      @relation(fields: [visitorId], references: [id], onDelete: SetNull)
+
+  telegramStatus NotifyStatus  @default(PENDING)
+  telegramError  String?
+
+  isDemo         Boolean       @default(false)
+  files          LeadFile[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([referralLinkId])
+}
+
+/// Uploaded client files. Uploaded before the lead exists (leadId = null),
+/// then claimed by the lead with the same formId.
+model LeadFile {
+  id           String   @id @default(cuid())
+  leadId       Int?
+  lead         Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  formId       String
+  originalName String
+  storageKey   String   @unique
+  mimeType     String
+  size         Int
+  createdAt    DateTime @default(now())
+
+  @@index([formId])
+  @@index([leadId])
+}
+
+// ─── Referral & analytics ────────────────────────────────────
+
+model ReferralLink {
+  id        String          @id @default(cuid())
+  name      String
+  code      String          @unique
+  archived  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  clicks    ReferralClick[]
+  leads     Lead[]
+}
+
+model ReferralClick {
+  id             String       @id @default(cuid())
+  referralLinkId String
+  referralLink   ReferralLink @relation(fields: [referralLinkId], references: [id], onDelete: Cascade)
+  visitorId      String?
+  landingPath    String?
+  createdAt      DateTime     @default(now())
+
+  @@index([referralLinkId, createdAt])
+}
+
+/// Anonymous first-party visitor (random id kept in a cookie). No personal data.
+model Visitor {
+  id               String   @id
+  firstSeenAt      DateTime @default(now())
+  lastSeenAt       DateTime @default(now())
+  firstSource      String   @default("direct")
+  firstRefCode     String?
+  firstLandingPath String?
+  deviceType       String?
+  isDemo           Boolean  @default(false)
+  events           Event[]
+  leads            Lead[]
+
+  @@index([firstSeenAt])
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  visitorId String
+  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  sessionId String
+  type      String
+  path      String
+  label     String?
+  source    String   @default("direct")
+  refCode   String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt, type])
+  @@index([visitorId])
+  @@index([sessionId])
+}
+
+// ─── Settings ────────────────────────────────────────────────
+
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
