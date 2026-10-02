@@ -161,6 +161,14 @@ try {
   await ap.fill("#password", "wrong-password-123");
   await ap.click('button[type="submit"]');
   ok(await ap.getByText("Неверный email или пароль").waitFor({ timeout: 15_000 }).then(() => true, () => false), "неверный пароль отклонён");
+  for (let i = 0; i < 5; i++) {
+    await ap.fill("#email", "brute-force@example.com");
+    await ap.fill("#password", `guess-${i}-password`);
+    await Promise.all([ap.waitForResponse((r) => r.request().method() === "POST" && r.url().includes("/admin/login")), ap.click('button[type="submit"]')]);
+  }
+  await ap.fill("#password", "guess-final-password");
+  await ap.click('button[type="submit"]');
+  ok(await ap.getByText("Слишком много неудачных попыток").waitFor({ timeout: 15_000 }).then(() => true, () => false), "перебор пароля блокируется после 5 попыток");
   await anon.close();
 
   step("18–22. Админка: вход, заявка, файлы, статус, Excel");
