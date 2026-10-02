@@ -19,7 +19,7 @@ export default async function PrivacyPage() {
   ];
   return (
     <>
-      <PageHero eyebrow="Документы" title="Политика конфиденциальности" text="Коротко и по-человечески: что мы собираем, зачем и как это защищено." />
+      <PageHero bg="/images/backgrounds/green-modern.webp" eyebrow="Документы" title="Политика конфиденциальности" text="Коротко и по-человечески: что мы собираем, зачем и как это защищено." />
       <section className="py-16 md:py-24">
         <div className="container-x max-w-3xl space-y-12">
           {sections.map(([h, ps]) => (

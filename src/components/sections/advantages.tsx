@@ -12,7 +12,7 @@ const ITEMS = [
 
 export function Advantages({ index = "04" }: { index?: string }) {
   return (
-    <Section>
+    <Section bg="/images/backgrounds/brick-cottage.webp" bgOpacity={0.3}>
       <SectionHeader index={index} eyebrow="Почему VAREN" title={<>Двадцать лет на&nbsp;стройке учат простым вещам</>} text="Мы не обещаем «лучшее качество на рынке». Мы обещаем порядок — в смете, на площадке и в документах." />
       <div className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
         {ITEMS.map((it, i) => (

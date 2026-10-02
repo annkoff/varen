@@ -40,6 +40,9 @@ yarn-error.log*
 # private uploaded client files (local storage driver)
 /storage
 
+# demo tunnel address (scripts/tunnel.mjs)
+.tunnel-url
+
 # exports
 *.xlsx
 

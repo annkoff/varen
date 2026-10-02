@@ -2,13 +2,14 @@ import { CopyButton } from "@/components/admin/copy-button";
 import { ReferralCreate } from "@/components/admin/referral-create";
 import { AdminHeader, Badge, Card, EmptyState, TableWrap } from "@/components/admin/ui";
 import { db } from "@/lib/db";
+import { publicSiteUrl } from "@/lib/site-url";
 import { formatDate, formatPercent } from "@/lib/format";
 import { toggleReferral } from "./actions";
 
 export const metadata = { title: "Реферальные ссылки" };
 
 export default async function ReferralsPage() {
-  const site = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const site = publicSiteUrl();
   const links = await db.referralLink.findMany({ orderBy: [{ archived: "asc" }, { createdAt: "desc" }] });
 
   const [clicks, uniques, leads] = await Promise.all([

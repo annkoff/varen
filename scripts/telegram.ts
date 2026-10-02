@@ -1,6 +1,7 @@
 /**
  * Telegram helper.
  *   npm run telegram -- setup <TOKEN>     → full automatic setup (see below)
+ *   npm run telegram -- avatar           → set the VAREN logo as the bot profile photo
  *   npm run telegram -- check            → bot info (getMe)
  *   npm run telegram -- chats            → chat ids from recent messages (getUpdates)
  *   npm run telegram -- test             → sends a test message to TELEGRAM_CHAT_ID
@@ -29,6 +30,18 @@ async function api<T = unknown>(method: string, body?: Record<string, unknown>):
   const json = (await res.json()) as { ok: boolean; result: T; description?: string };
   if (!json.ok) throw new Error(`${method}: ${json.description}`);
   return json.result;
+}
+
+/** Uploads public/brand/bot-avatar.jpg (render it with `node scripts/bot-avatar.mjs`) as the bot profile photo. */
+async function setAvatar() {
+  const file = path.resolve("public/brand/bot-avatar.jpg");
+  if (!fs.existsSync(file)) throw new Error("Нет public/brand/bot-avatar.jpg — выполните node scripts/bot-avatar.mjs");
+  const form = new FormData();
+  form.set("photo", JSON.stringify({ type: "static", photo: "attach://avatar" }));
+  form.set("avatar", new Blob([fs.readFileSync(file)], { type: "image/jpeg" }), "avatar.jpg");
+  const res = await fetch(`https://api.telegram.org/bot${token}/setMyProfilePhoto`, { method: "POST", body: form });
+  const json = (await res.json()) as { ok: boolean; description?: string };
+  if (!json.ok) throw new Error(`setMyProfilePhoto: ${json.description}`);
 }
 
 /** Updates or appends KEY="value" lines in .env without touching other variables. */
@@ -63,6 +76,7 @@ async function setup() {
     await api("setChatMenuButton", { menu_button: { type: "commands" } });
   }
   console.log("✔ Описание со ссылкой на сайт и меню команд установлены");
+  await setAvatar().then(() => console.log("✔ Аватарка с логотипом VAREN установлена"), (e) => console.log(`! Аватарку поставить не удалось (${e.message}) — загрузите public/brand/bot-avatar.jpg через @BotFather → /setuserpic`));
 
   let chatId = process.env.TELEGRAM_CHAT_ID;
   if (!chatId || process.argv.includes("--rebind")) {
@@ -105,7 +119,10 @@ async function setup() {
 async function main() {
   if (cmd === "setup") return setup();
   if (!token) throw new Error("TELEGRAM_BOT_TOKEN не задан в .env (или выполните: npm run telegram -- setup <токен>)");
-  if (cmd === "check") {
+  if (cmd === "avatar") {
+    await setAvatar();
+    console.log("Аватарка установлена.");
+  } else if (cmd === "check") {
     console.log(await api("getMe"));
   } else if (cmd === "chats") {
     const updates = await api<Array<{ message?: { chat: { id: number; type: string; title?: string; username?: string; first_name?: string } } }>>("getUpdates");

@@ -2,14 +2,14 @@ import "server-only";
 import type { Lead } from "@prisma/client";
 import { LEAD_SERVICE_LABELS } from "@/content/services";
 import { db } from "../db";
-import { env } from "../env";
+import { publicSiteUrl } from "../site-url";
 import { formatDate, formatNumber, formatRub, leadNumber } from "../format";
 import { describeInput, parseCalculatorInput } from "../calculator";
 import { getPricing } from "../settings";
 import { canUseUrlButtons, escapeHtml, sendMessage, type InlineButton } from "./client";
 
 export async function buildLeadMessage(lead: Lead & { _count?: { files: number } }, filesCount: number) {
-  const siteUrl = env().SITE_URL.replace(/\/$/, "");
+  const siteUrl = publicSiteUrl();
   const pricing = await getPricing();
   const h = escapeHtml;
   const lines: string[] = [

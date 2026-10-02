@@ -18,7 +18,7 @@ export default async function ReviewsPage() {
   const avg = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
   return (
     <>
-      <PageHero eyebrow="Отзывы" title="Говорят те, кто уже живёт в своём доме" text="Хорошее и не очень — мы публикуем отзывы целиком. Часть из них привязана к проектам: можно открыть и посмотреть, о каком доме речь." />
+      <PageHero bg="/images/backgrounds/brick-cottage.webp" eyebrow="Отзывы" title="Говорят те, кто уже живёт в своём доме" text="Хорошее и не очень — мы публикуем отзывы целиком. Часть из них привязана к проектам: можно открыть и посмотреть, о каком доме речь." />
       <section className="py-16 md:py-24">
         <div className="container-x">
           {reviews.length > 0 && (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Calculator } from "@/components/calculator/calculator";
 import { Faq } from "@/components/sections/faq";
+import { Materials } from "@/components/sections/materials";
 import { PriceTiers } from "@/components/sections/price-tiers";
 import { PageHero, Section, SectionHeader } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
@@ -37,12 +38,14 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
 
   return (
     <>
-      <PageHero eyebrow="Стоимость" title="Сколько стоит построить дом" text="Ниже — ориентиры и калькулятор. Он показывает не «цену с потолка», а формулу: что входит, сколько стоит каждая строка и почему итог именно такой." />
+      <PageHero bg="/images/backgrounds/black-timber.webp" eyebrow="Стоимость" title="Сколько стоит построить дом" text="Ниже — ориентиры и калькулятор. Он показывает не «цену с потолка», а формулу: что входит, сколько стоит каждая строка и почему итог именно такой." />
 
       <Section>
         <SectionHeader eyebrow="Цены" title="Три комплектации" text="Цены указаны «от» за квадратный метр дома. Финальная смета составляется после проекта." />
         <PriceTiers pricing={pricing} />
       </Section>
+
+      <Materials pricing={pricing} />
 
       <Section id="calculator" className="scroll-mt-16 border-t border-line">
         <SectionHeader eyebrow="Калькулятор" title="Предварительный расчёт" text="Меняйте параметры — сумма пересчитывается сразу. С результатом можно сразу оставить заявку: все параметры уйдут менеджеру." />

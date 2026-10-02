@@ -28,7 +28,7 @@ export default async function ContactsPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <PageHero eyebrow="Контакты" title="Приезжайте, звоните, пишите" text="Офис в центре Москвы, напротив Пушкинского музея. Покажем образцы материалов и расскажем о проектах." />
+      <PageHero bg="/images/backgrounds/white-villa.webp" eyebrow="Контакты" title="Приезжайте, звоните, пишите" text="Офис в центре Москвы, напротив Пушкинского музея. Покажем образцы материалов и расскажем о проектах." />
       <Section>
         <ContactsBlock contacts={contacts} />
       </Section>

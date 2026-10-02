@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { blurProps } from "@/lib/images";
 import { ButtonLink } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -13,7 +14,7 @@ export function CtaBand({
 }) {
   return (
     <section className="relative isolate overflow-hidden">
-      <Image src={image} alt="" fill sizes="100vw" quality={85} className="-z-10 object-cover" />
+      <Image src={image} {...blurProps(image)} alt="" fill sizes="100vw" quality={85} className="-z-10 object-cover" />
       <div className="absolute inset-0 -z-10 bg-ink/70" />
       <div className="container-x py-28 md:py-40">
         <Reveal className="max-w-3xl">

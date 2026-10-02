@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
+import { mosaicClasses, mosaicSizes } from "@/lib/mosaic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IMAGE_CATEGORY_LABELS, type ImageCategoryKey } from "@/content/site";
 import { track } from "@/lib/analytics/client";
@@ -11,7 +12,11 @@ export interface GalleryImage {
   url: string;
   alt: string;
   category: ImageCategoryKey;
+  /** Tiny blurred preview (built on the server) shown while the photo loads. */
+  blur?: string;
 }
+
+const preview = (img: GalleryImage) => (img.blur ? { placeholder: "blur" as const, blurDataURL: img.blur } : {});
 
 export function ProjectGallery({ images, projectSlug }: { images: GalleryImage[]; projectSlug: string }) {
   const categories = (Object.keys(IMAGE_CATEGORY_LABELS) as ImageCategoryKey[]).filter((c) => images.some((i) => i.category === c));
@@ -43,19 +48,16 @@ export function ProjectGallery({ images, projectSlug }: { images: GalleryImage[]
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
         {visible.map((img, i) => (
           <button
             key={img.id}
             type="button"
             onClick={() => openAt(i)}
-            className={clsx(
-              "img-zoom group relative overflow-hidden bg-ink-2 text-left animate-fade",
-              i % 5 === 0 ? "col-span-2 row-span-2 aspect-square md:aspect-auto" : "aspect-square"
-            )}
+            className={clsx("img-zoom group relative overflow-hidden bg-ink-2 text-left animate-fade", mosaicClasses(i, visible.length))}
             aria-label={`Открыть фото: ${img.alt}`}
           >
-            <Image src={img.url} alt={img.alt} fill sizes={i % 5 === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"} quality={85} className="object-cover" />
+            <Image src={img.url} {...preview(img)} alt={img.alt} fill sizes={mosaicSizes(i)} quality={85} className="object-cover" />
             <span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/80 to-transparent p-4 pt-10 text-xs tracking-wide text-paper/90 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
               {IMAGE_CATEGORY_LABELS[img.category]} · {img.alt}
             </span>
@@ -116,7 +118,7 @@ function Lightbox({ images, index, onIndex, onClose }: { images: GalleryImage[];
         </button>
       </div>
       <div className="relative min-h-0 flex-1" onClick={onClose}>
-        <Image key={img.id} src={img.url} alt={img.alt} fill sizes="100vw" quality={92} className="object-contain px-2 animate-fade md:px-20" onClick={(e) => e.stopPropagation()} />
+        <Image key={img.id} src={img.url} {...preview(img)} alt={img.alt} fill sizes="100vw" quality={92} className="object-contain px-2 animate-fade md:px-20" onClick={(e) => e.stopPropagation()} />
         <button type="button" onClick={(e) => { e.stopPropagation(); go(-1); }} className="absolute left-2 top-1/2 hidden h-14 w-14 -translate-y-1/2 items-center justify-center text-paper/70 hover:text-paper md:flex" aria-label="Предыдущее фото">
           <svg viewBox="0 0 24 10" className="h-3 w-8 rotate-180" fill="none" stroke="currentColor" strokeWidth={1.2} aria-hidden><path d="M0 5h23M18.5 .5 23 5l-4.5 4.5" /></svg>
         </button>

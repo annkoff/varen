@@ -31,7 +31,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
 
   return (
     <>
-      <PageHero eyebrow="Проекты" title="Дома, которые мы построили" text="Двенадцать разных историй: от компактного одноэтажного дома до особняка на три этажа. Откройте любой — внутри фотографии, параметры и что именно мы сделали." />
+      <PageHero bg="/images/backgrounds/forest-lodge.webp" eyebrow="Проекты" title="Дома, которые мы построили" text="Двенадцать разных историй: от компактного одноэтажного дома до особняка на три этажа. Откройте любой — внутри фотографии, параметры и что именно мы сделали." />
 
       <section className="py-16 md:py-24">
         <div className="container-x">

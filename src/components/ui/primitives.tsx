@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Link from "next/link";
+import { BgPhoto } from "./bg-photo";
 import { Reveal } from "./reveal";
 
 export function Arrow({ className }: { className?: string }) {
@@ -73,18 +74,20 @@ export function SectionHeader({
   );
 }
 
-export function Section({ children, className, id }: { children: React.ReactNode; className?: string; id?: string }) {
+export function Section({ children, className, id, bg, bgOpacity }: { children: React.ReactNode; className?: string; id?: string; bg?: string; bgOpacity?: number }) {
   return (
-    <section id={id} className={clsx("py-24 md:py-32", className)}>
+    <section id={id} className={clsx("py-24 md:py-32", bg && "relative isolate", className)}>
+      {bg && <BgPhoto src={bg} opacity={bgOpacity ?? 0.38} />}
       <div className="container-x">{children}</div>
     </section>
   );
 }
 
-export function PageHero({ eyebrow, title, text, image }: { eyebrow: string; title: React.ReactNode; text?: React.ReactNode; image?: React.ReactNode }) {
+/** Page title block. `bg` — a darkened, semi-transparent house photo behind the text. */
+export function PageHero({ eyebrow, title, text, bg }: { eyebrow: string; title: React.ReactNode; text?: React.ReactNode; bg?: string }) {
   return (
-    <header className="relative overflow-hidden border-b border-line pt-36 pb-16 md:pt-48 md:pb-24">
-      {image && <div className="absolute inset-0 -z-10">{image}<div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/75 to-ink" /></div>}
+    <header className="relative isolate overflow-hidden border-b border-line pt-36 pb-16 md:pt-48 md:pb-24">
+      {bg && <BgPhoto src={bg} opacity={0.62} priority />}
       <div className="container-x">
         <p className="eyebrow mb-6 animate-hero">{eyebrow}</p>
         <h1 className="display max-w-5xl text-[clamp(2.6rem,7vw,6.5rem)] animate-hero" style={{ animationDelay: "80ms" }}>

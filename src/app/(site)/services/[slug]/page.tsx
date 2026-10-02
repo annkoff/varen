@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { blurProps } from "@/lib/images";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/sections/cta-band";
 import { Arrow, ButtonLink } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { getService, SERVICES } from "@/content/services";
+import { mosaicClasses, mosaicSizes } from "@/lib/mosaic";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -33,7 +35,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <article>
       <header className="relative isolate flex min-h-[78svh] items-end overflow-hidden">
-        <Image src={s.image} alt={s.title} fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />
+        <Image src={s.image} {...blurProps(s.image)} alt={s.title} fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/40 to-ink/50" />
         <div className="container-x pb-12 pt-36 md:pb-16">
           <nav aria-label="Хлебные крошки" className="eyebrow mb-6 flex items-center gap-3 text-paper/70">
@@ -76,10 +78,10 @@ export default async function ServicePage({ params }: Props) {
       </section>
 
       <section className="pb-20 md:pb-28">
-        <div className="container-x grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+        <div className="container-x grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
           {s.gallery.map((src, i) => (
-            <Reveal key={src} delay={i * 60} className={`relative overflow-hidden bg-ink-2 ${i === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square"}`}>
-              <Image src={src} alt={`${s.title} — пример работ`} fill sizes={i === 0 ? "50vw" : "25vw"} quality={85} className="object-cover" />
+            <Reveal key={src} delay={i * 60} className={`relative overflow-hidden bg-ink-2 ${mosaicClasses(i, s.gallery.length)}`}>
+              <Image src={src} {...blurProps(src)} alt={`${s.title} — пример работ`} fill sizes={mosaicSizes(i)} quality={85} className="object-cover" />
             </Reveal>
           ))}
         </div>

@@ -11,7 +11,7 @@ const FAQ = [
 
 export function Faq({ index = "08" }: { index?: string }) {
   return (
-    <Section>
+    <Section bg="/images/backgrounds/pool-villa.webp" bgOpacity={0.34}>
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionHeader index={index} eyebrow="Вопросы" title="Что обычно спрашивают на первой встрече" className="!mb-0 !block" />

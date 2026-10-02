@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { blurProps } from "@/lib/images";
 import Link from "next/link";
 import { ProjectCard } from "@/components/projects/project-card";
 import { ReviewCard } from "@/components/reviews/review-card";
@@ -8,6 +9,7 @@ import { CtaBand } from "@/components/sections/cta-band";
 import { Faq } from "@/components/sections/faq";
 import { PriceTiers } from "@/components/sections/price-tiers";
 import { Process } from "@/components/sections/process";
+import { Materials } from "@/components/sections/materials";
 import { Arrow, ButtonLink, DemoNote, Section, SectionHeader } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { SERVICES } from "@/content/services";
@@ -44,7 +46,7 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-        <Image src="/images/photos/ph-49.webp" alt="Современный загородный дом VAREN с архитектурной подсветкой" fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />
+        <Image src="/images/photos/ph-49.webp" {...blurProps("/images/photos/ph-49.webp")} alt="Современный загородный дом VAREN с архитектурной подсветкой" fill priority sizes="100vw" quality={92} className="-z-10 object-cover animate-slow-zoom" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/50" />
         <div className="container-x pb-10 pt-32 md:pb-14">
           <p className="eyebrow mb-6 animate-hero text-paper/70">С {FOUNDED_YEAR} года · по всей России</p>
@@ -79,7 +81,7 @@ export default async function HomePage() {
       </section>
 
       {/* Positioning */}
-      <Section>
+      <Section bg="/images/backgrounds/green-modern.webp" bgOpacity={0.42}>
         <div className="grid gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-4">
             <p className="eyebrow flex items-center gap-4">
@@ -113,7 +115,7 @@ export default async function HomePage() {
                 <h3 className="text-[clamp(1.5rem,3vw,2.5rem)] font-light tracking-tight transition-colors group-hover:text-sand-2 md:col-span-5">{s.title}</h3>
                 <p className="text-[15px] leading-relaxed text-mute md:col-span-4">{s.short}</p>
                 <div className="relative hidden aspect-[4/3] overflow-hidden md:col-span-2 md:block">
-                  <Image src={s.image} alt="" fill sizes="200px" quality={85} className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" />
+                  <Image src={s.image} {...blurProps(s.image)} alt="" fill sizes="200px" quality={85} className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" />
                 </div>
               </Link>
             </Reveal>
@@ -160,13 +162,15 @@ export default async function HomePage() {
         )}
       </Section>
 
-      <Advantages />
+      <Materials pricing={pricing} index="04" />
+
+      <Advantages index="05" />
 
       {/* Own project */}
       <Section className="pt-0 md:pt-0">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           <Reveal className="relative aspect-[4/5] overflow-hidden lg:col-span-5">
-            <Image src="/images/photos/ph-87.webp" alt="Двусветная гостиная в доме VAREN" fill sizes="(min-width: 1024px) 40vw, 100vw" quality={85} className="object-cover" />
+            <Image src="/images/photos/ph-87.webp" {...blurProps("/images/photos/ph-87.webp")} alt="Двусветная гостиная в доме VAREN" fill sizes="(min-width: 1024px) 40vw, 100vw" quality={85} className="object-cover" />
           </Reveal>
           <div className="lg:col-span-6 lg:col-start-7">
             <SectionHeader eyebrow="Как начать" title="С нашим проектом, с вашим или с вашим дизайнером" className="!mb-10 !block" />
@@ -187,11 +191,11 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      <Process index="05" />
+      <Process index="06" />
 
       {/* Pricing */}
       <Section id="prices">
-        <SectionHeader index="06" eyebrow="Стоимость" title="Сколько стоит дом" text="Ориентиры за квадратный метр. Точную цифру по вашему дому покажет калькулятор — с формулой и расшифровкой." />
+        <SectionHeader index="07" eyebrow="Стоимость" title="Сколько стоит дом" text="Ориентиры за квадратный метр. Точную цифру по вашему дому покажет калькулятор — с формулой и расшифровкой." />
         <PriceTiers pricing={pricing} />
       </Section>
 
@@ -199,7 +203,7 @@ export default async function HomePage() {
       {reviews.length > 0 && (
         <Section className="border-t border-line">
           <SectionHeader
-            index="07"
+            index="08"
             eyebrow="Отзывы"
             title="Что говорят заказчики"
             action={
@@ -219,13 +223,13 @@ export default async function HomePage() {
         </Section>
       )}
 
-      <Faq index="08" />
+      <Faq index="09" />
 
       <CtaBand />
 
       {/* Contacts */}
       <Section>
-        <SectionHeader index="09" eyebrow="Контакты" title="Приезжайте в гости" text="Покажем материалы, узлы и фотографии объектов. Лучше договориться о встрече заранее." />
+        <SectionHeader index="10" eyebrow="Контакты" title="Приезжайте в гости" text="Покажем материалы, узлы и фотографии объектов. Лучше договориться о встрече заранее." />
         <ContactsBlock contacts={contacts} />
       </Section>
     </>

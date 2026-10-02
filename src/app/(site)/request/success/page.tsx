@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { blurProps } from "@/lib/images";
 import { ButtonLink } from "@/components/ui/primitives";
 import { leadNumber } from "@/lib/format";
 import { getContacts } from "@/lib/settings";
@@ -16,7 +17,7 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
 
   return (
     <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden">
-      <Image src="/images/photos/ph-21.webp" alt="" fill priority sizes="100vw" quality={85} className="-z-10 object-cover" />
+      <Image src="/images/photos/ph-21.webp" {...blurProps("/images/photos/ph-21.webp")} alt="" fill priority sizes="100vw" quality={85} className="-z-10 object-cover" />
       <div className="absolute inset-0 -z-10 bg-ink/80" />
       <div className="container-x py-36">
         <div className="max-w-3xl animate-hero">

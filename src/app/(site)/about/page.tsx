@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { blurProps } from "@/lib/images";
 import { Advantages } from "@/components/sections/advantages";
 import { CtaBand } from "@/components/sections/cta-band";
+import { Materials } from "@/components/sections/materials";
+import { getPricing } from "@/lib/settings";
 import { PageHero, Section, SectionHeader } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { FOUNDED_YEAR } from "@/content/site";
@@ -12,14 +15,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-const TECH = [
-  ["Газобетон", "Тёплый, точный по геометрии, предсказуемый по смете. Самый частый выбор для круглогодичного дома."],
-  ["Кирпич", "Долговечность на поколения и фасад, который не требует ухода. Дороже и дольше, но это на века."],
-  ["Клееный брус и бревно", "Для тех, кто любит дерево. Учитываем усадку в инженерии и отделке с первого дня."],
-  ["Каркас", "Быстро, тепло и экономно. Строим по скандинавской технологии с правильной пароизоляцией."],
-  ["Монолит", "Когда нужны большие пролёты, консоли и сложная архитектура."],
-];
-
 const TIMELINE = [
   ["2005", "Первая бригада из шести человек и первый дом в Подмосковье — он до сих пор стоит, мы иногда заезжаем в гости."],
   ["2009", "Собственное архитектурное бюро: перестали зависеть от чужих проектов и научились считать до чертежей."],
@@ -29,11 +24,15 @@ const TIMELINE = [
   ["Сегодня", "Полный цикл — от геологии до газона. И всё та же привычка приезжать на объект без предупреждения."],
 ];
 
-export default function AboutPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AboutPage() {
+  const pricing = await getPricing();
   const years = new Date().getFullYear() - FOUNDED_YEAR;
   return (
     <>
       <PageHero
+        bg="/images/backgrounds/lake-house.webp"
         eyebrow="О компании"
         title={<>Строим с {FOUNDED_YEAR} года. Без суеты.</>}
         text="VAREN — это архитекторы, инженеры, прорабы и отделочники, которые работают вместе дольше, чем существуют многие строительные бренды."
@@ -42,7 +41,7 @@ export default function AboutPage() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-12">
           <Reveal className="relative aspect-[4/5] overflow-hidden lg:col-span-5">
-            <Image src="/images/photos/ph-122.webp" alt="Дом VAREN вечером" fill sizes="(min-width:1024px) 40vw, 100vw" quality={85} className="object-cover" />
+            <Image src="/images/photos/ph-122.webp" {...blurProps("/images/photos/ph-122.webp")} alt="Дом VAREN вечером" fill sizes="(min-width:1024px) 40vw, 100vw" quality={85} className="object-cover" />
           </Reveal>
           <Reveal className="prose-v text-lg lg:col-span-6 lg:col-start-7" delay={80}>
             <p className="!text-paper text-[clamp(1.3rem,2.2vw,1.8rem)] !leading-snug">
@@ -61,19 +60,9 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
-        <SectionHeader eyebrow="Технологии" title="Строим из того, что подходит вам" text="Не продаём «свою» технологию. Помогаем выбрать — и строим." />
-        <div className="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-5">
-          {TECH.map(([t, d], i) => (
-            <Reveal key={t} delay={i * 60} className="bg-ink p-8">
-              <h3 className="h-card text-lg">{t}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-mute">{d}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
+      <Materials pricing={pricing} />
 
-      <Section className="border-t border-line bg-ink-2">
+      <Section className="border-t border-line" bg="/images/backgrounds/forest-lodge.webp" bgOpacity={0.34}>
         <SectionHeader eyebrow="История" title="Как мы росли" />
         <ol className="border-t border-line">
           {TIMELINE.map(([y, t], i) => (

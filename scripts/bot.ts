@@ -7,6 +7,7 @@
  */
 import { PrismaClient } from "@prisma/client";
 import { handleUpdate, type TgButton, type TgUpdate } from "../src/lib/telegram/commands";
+import { publicSiteUrl } from "../src/lib/site-url";
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 if (!token) {
@@ -42,7 +43,7 @@ async function main() {
       const updates = await call<Array<TgUpdate & { update_id: number }>>("getUpdates", { offset, timeout: 50, allowed_updates: ["message"] }, 60_000);
       for (const u of updates) {
         offset = u.update_id + 1;
-        await handleUpdate(u, { db, send, siteUrl: process.env.SITE_URL ?? "http://localhost:3000", managerChatId: process.env.TELEGRAM_CHAT_ID }).catch((e) => console.error("update failed:", e));
+        await handleUpdate(u, { db, send, siteUrl: publicSiteUrl(), managerChatId: process.env.TELEGRAM_CHAT_ID }).catch((e) => console.error("update failed:", e));
         if (u.message?.text) console.log(`← ${u.message.chat.id}: ${u.message.text.slice(0, 40)}`);
       }
     } catch (e) {

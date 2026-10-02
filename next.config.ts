@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   images: {
-    formats: ["image/avif", "image/webp"],
+    // WebP only: AVIF encoding of large photos takes seconds on first view.
+    formats: ["image/webp"],
     qualities: [85, 92],
     localPatterns: [{ pathname: "/images/**" }, { pathname: "/media/**" }],
     deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],

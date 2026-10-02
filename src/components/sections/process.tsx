@@ -12,7 +12,7 @@ const STEPS = [
 
 export function Process({ index = "05" }: { index?: string }) {
   return (
-    <Section className="border-y border-line bg-ink-2">
+    <Section className="border-y border-line" bg="/images/backgrounds/stone-estate.webp" bgOpacity={0.36}>
       <SectionHeader index={index} eyebrow="Как мы работаем" title="Шесть шагов от разговора до ключей" />
       <ol className="grid gap-x-10 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
         {STEPS.map((s, i) => (

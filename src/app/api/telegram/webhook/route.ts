@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import { publicSiteUrl } from "@/lib/site-url";
 import { handleUpdate, type TgButton, type TgUpdate } from "@/lib/telegram/commands";
 
 function validSecret(header: string | null, expected: string | undefined): boolean {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   await handleUpdate(update, {
     db,
-    siteUrl: e.SITE_URL,
+    siteUrl: publicSiteUrl(),
     managerChatId: e.TELEGRAM_CHAT_ID,
     send: (chatId, text, rows: TgButton[][] = []) =>
       fetch(`https://api.telegram.org/bot${e.TELEGRAM_BOT_TOKEN}/sendMessage`, {
